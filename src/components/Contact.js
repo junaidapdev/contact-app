@@ -8,9 +8,13 @@ import { FaRegStar, FaStar } from "react-icons/fa";
 import { MdDelete, MdEdit } from "react-icons/md";
 
 //TODO: add firebase
+import firebase from "firebase/compat/app"
 
 // context stuffs
 //TODO: import context and action: update and single_contact
+
+import { ContactContext } from "../context/Context";
+import { CONTACT_TO_UPDATE, SET_SINGLE_CONTACT } from "../context/action.types";
 
 import { useHistory } from "react-router-dom";
 
@@ -19,17 +23,46 @@ import { toast } from "react-toastify";
 const Contact = ({ contact, contactKey }) => {
   //TODO: destructuring dispatch from the context
 
+  const { dispatch } = useContext(ContactContext)
+
+
   // history hooks to get history
   const history = useHistory();
 
   // to delete the contact when delete contact is clicked
   const deleteContact = () => {
     //TODO: create this method from firebase
+
+    firebase.database()
+    .ref(`/contacts/${contactKey}`)
+    .remove()
+    .then(() => {
+      toast("Deleted Successfully", {type: "warning"})
+    })
+    .catch(err => console.log(err) )
   };
 
   // update the star/important contact ,ie, star it or unstar the single contact
   const updateImpContact = () => {
     //TODO: update (star) contact, use contactKey
+
+
+    firebase.database()
+    .ref(`/contacts/${contactKey}`)
+    .update(
+      {
+        star: !contact.star
+      },
+      err => {
+        console.log(err)
+      }
+    )
+    .then(() => {
+      toast("Contact Updated", {type: "info"})
+    })
+    .catch(err => console.log(err))
+
+
   };
 
   // when the update icon/ pen ion is clicked

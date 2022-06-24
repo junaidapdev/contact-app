@@ -135,7 +135,7 @@ const AddContact = () => {
     //TODO: add contact method
 
     try {
-      firebase.database.ref('contact/' +v4()).set({
+      firebase.database().ref('contact/' +v4()).set({
         name, email, phoneNumber, address, picture: downloadUrl, star 
       })
     } catch (error) {
@@ -164,6 +164,10 @@ const AddContact = () => {
   // firing when the user click on submit button or the form has been submitted
   const handleSubmit = e => {
     e.preventDefault();
+
+    isUpdate ? updateContact() : addContact()
+
+    toast("Succes", {type: "success"})
 
     // isUpdate wll be true when the user came to update the contact
     // when their is contact then updating and when no contact to update then adding contact
